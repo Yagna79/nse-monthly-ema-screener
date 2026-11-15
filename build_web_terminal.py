@@ -27,7 +27,7 @@ def build():
 
     # Pre-calculate counts for HUD
     total_stocks = len(stocks_list)
-    near_ema_count = sum(1 for s in stocks_list if abs(s.get('Diff_%', 99)) <= 4.0)
+    near_ema_count = sum(1 for s in stocks_list if abs(s.get('Diff_%', 99)) <= 4.0 and not s.get('Is_IPO', False))
     super_growth_count = sum(1 for s in stocks_list if 'Super Growth' in s.get('intel', {}).get('financials', {}).get('badge', '') or '▲' in s.get('intel', {}).get('financials', {}).get('pat_growth_fmt', ''))
     near_52w_count = sum(1 for s in stocks_list if abs(s.get('Dist_52W_%', 99)) <= 5.0)
     htf_count = sum(1 for s in stocks_list if s.get('Is_HTF', False))
