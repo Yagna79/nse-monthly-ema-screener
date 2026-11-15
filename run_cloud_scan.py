@@ -249,9 +249,12 @@ def run_pipeline():
         log("No symbols to scan. Aborting.")
         return
 
-    # Load existing database to retain if scan fails
+    # Reset option support
+    force_reset = "--reset" in sys.argv or os.environ.get("FORCE_RESET") == "true"
     existing_stocks = {}
-    if os.path.exists(DB_FILE):
+    if force_reset:
+        log("FORCE_RESET detected: Wiping existing database and running 100% fresh scan from scratch...")
+    elif os.path.exists(DB_FILE):
         try:
             with open(DB_FILE, "r", encoding="utf-8") as f:
                 d = json.load(f)

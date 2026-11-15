@@ -196,7 +196,7 @@ def build():
         <button onclick="toggleWatchlistFilter()" id="watchlist-toggle-btn" class="px-3.5 py-2 rounded-xl bg-slate-800/90 hover:bg-amber-500/20 border border-slate-700 text-xs font-semibold text-amber-300 transition flex items-center gap-2">
           <i class="fa-solid fa-star text-amber-400"></i> Watchlist (<span id="watchlist-count">0</span>)
         </button>
-        <button onclick="location.reload()" class="p-2 w-9 h-9 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-300 transition flex items-center justify-center" title="Refresh">
+        <button onclick="forceResetCache()" class="p-2 w-9 h-9 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-slate-700 text-xs font-medium text-slate-300 transition flex items-center justify-center" title="Refresh">
           <i class="fa-solid fa-rotate-right text-slate-400"></i>
         </button>
       </div>
@@ -553,6 +553,12 @@ def build():
         }}
       }});
       applyFilters();
+    }}
+
+    function forceResetCache() {{
+      const url = new URL(window.location.href);
+      url.searchParams.set('t', Date.now());
+      window.location.href = url.href;
     }}
 
     function applySorting() {{
