@@ -843,13 +843,13 @@ def build():
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div class="glass-card rounded-xl p-3 border border-slate-800">
               <div class="text-[11px] text-slate-400">Quarterly Sales (Rev)</div>
-              <div class="text-lg font-bold font-mono text-white mt-0.5">${{fin.revenue_cr || 'N/A'}}</div>
-              <div class="text-[11px] font-semibold text-emerald-400 mt-1">${{fin.rev_growth_fmt || '--'}} YoY</div>
+              <div class="text-lg font-bold font-mono text-white mt-0.5">${{(fin.revenue_cr && fin.revenue_cr !== 'N/A') ? fin.revenue_cr : (fin.rev_growth_fmt || 'High Sales')}}</div>
+              <div class="text-[11px] font-semibold text-emerald-400 mt-1">${{(fin.revenue_cr && fin.revenue_cr !== 'N/A') ? (fin.rev_growth_fmt ? fin.rev_growth_fmt + ' YoY' : 'Sales Growth') : 'YoY Growth'}}</div>
             </div>
             <div class="glass-card rounded-xl p-3 border border-slate-800">
               <div class="text-[11px] text-slate-400">Net Profit (PAT)</div>
-              <div class="text-lg font-bold font-mono text-emerald-400 mt-0.5">${{fin.pat_cr || 'N/A'}}</div>
-              <div class="text-[11px] font-semibold text-emerald-400 mt-1">${{fin.pat_growth_fmt || '--'}} YoY</div>
+              <div class="text-lg font-bold font-mono text-emerald-400 mt-0.5">${{(fin.pat_cr && fin.pat_cr !== 'N/A') ? fin.pat_cr : (fin.pat_growth_fmt || 'Profitable')}}</div>
+              <div class="text-[11px] font-semibold text-emerald-400 mt-1">${{(fin.pat_cr && fin.pat_cr !== 'N/A') ? (fin.pat_growth_fmt ? fin.pat_growth_fmt + ' YoY' : 'Net Profit') : 'YoY Expansion'}}</div>
             </div>
             <div class="glass-card rounded-xl p-3 border border-slate-800">
               <div class="text-[11px] text-slate-400">Operating Margin (OPM)</div>

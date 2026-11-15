@@ -1,3 +1,4 @@
+import requests
 import http.cookiejar
 import xml.etree.ElementTree as ET
 import email.utils
@@ -330,6 +331,8 @@ class IntelligenceProvider:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         }
+        self.session = requests.Session()
+        self.session.headers.update(self.headers)
         self.board_meetings = {}
         self.cache = {}
         self.cache_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "intelligence_cache.json")
@@ -418,11 +421,13 @@ class IntelligenceProvider:
             return None
         url = f"https://www.screener.in/company/{sym}/"
         try:
-            req = urllib.request.Request(url, headers=self.headers)
-            with urllib.request.urlopen(req, timeout=5) as resp:
-                if resp.status != 200:
+            resp = self.session.get(url, timeout=10)
+            if resp.status_code != 200:
+                # Try consolidated if standalone returned 404
+                resp = self.session.get(f"https://www.screener.in/company/{sym}/consolidated/", timeout=10)
+                if resp.status_code != 200:
                     return None
-                html = resp.read().decode('utf-8', errors='ignore')
+            html = resp.text
         except Exception:
             return None
 
@@ -596,7 +601,7 @@ class IntelligenceProvider:
             data["financials"] = screener_fin
 
         # Check Yahoo Finance if Screener.in didn't produce financials OR to get upcoming earnings calendar
-        need_yahoo_fin = not data["financials"]
+        need_yahoo_fin = False  # Strictly NO Yahoo Finance data for financials, ONLY Screener.in
         need_yahoo_cal = not data["upcoming_earnings"]
 
         if (need_yahoo_fin or need_yahoo_cal):
